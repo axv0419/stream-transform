@@ -76,7 +76,7 @@ public class StreamTransformer implements CommandLineRunner {
                     String k = new String(key);
                     String v = new String(value);
                     System.out.println( String.format("Kafka Message - Key: %s Value: %s ",k,v));
-                    return new KeyValue<String,String>(k, v);
+                    return new KeyValue<String,String>(k, v + k);
                 }
         }).to(streamAppConfig.getOutputTopic(), Produced.with(Serdes.String(), Serdes.String()));
 
