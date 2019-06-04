@@ -2,13 +2,11 @@ package com.dexcom.streamtransform;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
-import org.apache.kafka.streams.kstream.ForeachAction;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -63,16 +61,31 @@ public class StreamTransformer implements CommandLineRunner {
         // Construct a `KStream` from the input topic "streams-plaintext-input", where message values
         // represent lines of text (for the sake of this example, we ignore whatever may be stored
         // in the message keys).  The default key and value serdes will be used.
-        final KStream<byte[], byte[]> textLines = builder.stream(streamAppConfig.getInputTopic());
+        final KStream<byte[], byte[]> messageStream = builder.stream(streamAppConfig.getInputTopic());
 
-        final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
+//        final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 
-        textLines
-                .foreach(  (key,value ) ->{
-                    System.out.println( new String(key) + ": " + new String(value));
-                })
 
-        ;
+        messageStream.map(
+            new KeyValueMapper<byte[], byte[], KeyValue<String,String>>() {
+                @Override
+                public KeyValue<String,String> apply(final byte[] key, final byte[] value) {
+                    if (value == null) {
+                        return new KeyValue<>(null, null);
+                    }
+                    String k = new String(key);
+                    String v = new String(value);
+                    System.out.println( String.format("Kafka Message - Key: %s Value: %s ",k,v));
+                    return new KeyValue<String,String>(k, v);
+                }
+        }).to(streamAppConfig.getOutputTopic(), Produced.with(Serdes.String(), Serdes.String()));
+
+//        textLines
+//                .foreach(  (key,value ) ->{
+//                    System.out.println( new String(key) + ": " + new String(value));
+//                })
+//
+//        ;
 
 //        final KTable<String, Long> wordCounts = textLines
 //                // Split each text line, by whitespace, into words.  The text lines are the record
