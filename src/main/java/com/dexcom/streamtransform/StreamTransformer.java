@@ -67,11 +67,12 @@ public class StreamTransformer implements CommandLineRunner {
 
         final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 
-        textLines.foreach(new ForeachAction<byte[], byte[]>() {
-            public void  apply(byte[] key, byte[]value) {
-                System.out.println( new String(key) + ": " + new String(value));
-            }
-        });
+        textLines
+                .foreach(  (key,value ) ->{
+                    System.out.println( new String(key) + ": " + new String(value));
+                })
+
+        ;
 
 //        final KTable<String, Long> wordCounts = textLines
 //                // Split each text line, by whitespace, into words.  The text lines are the record
