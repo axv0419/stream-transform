@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 @Component
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix = "kafka-config")
+@ConfigurationProperties(prefix = "stream-connector-config")
 public class StreamAppConfig {
 
     @Value("${kafka-config.inputTopic}")
