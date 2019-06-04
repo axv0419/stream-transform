@@ -12,10 +12,10 @@ import java.util.HashMap;
 @ConfigurationProperties(prefix = "stream-connector-config")
 public class StreamAppConfig {
 
-    @Value("${kafka-config.inputTopic}")
+    @Value("${stream-connector-config.inputTopic}")
     private String inputTopic;
 
-    @Value("${kafka-config.outputTopic}")
+    @Value("${stream-connector-config.outputTopic}")
     private String outputTopic;
 
     private HashMap<String, String> streamSettings;

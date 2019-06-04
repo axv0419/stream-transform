@@ -1,4 +1,4 @@
-substitutions:
+  substitutions:
   _DEXCOM_PROJECT_ID: valley-app
   _DEXCOM_NAMESPACE: sorrento
 images:
