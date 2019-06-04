@@ -1,5 +1,8 @@
 package com.dexcom.streamtransform;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
@@ -7,16 +10,25 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
 import org.apache.kafka.streams.kstream.*;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class StreamTransformer implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(StreamTransformer.class);
 
     @Autowired
     private StreamAppConfig streamAppConfig;
@@ -65,6 +77,7 @@ public class StreamTransformer implements CommandLineRunner {
 
 //        final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 
+        final ObjectMapper objectMapper = new ObjectMapper();
 
         messageStream.map(
             new KeyValueMapper<byte[], byte[], KeyValue<String,String>>() {
@@ -75,8 +88,27 @@ public class StreamTransformer implements CommandLineRunner {
                     }
                     String k = new String(key);
                     String v = new String(value);
-                    System.out.println( String.format("Kafka Message - Key: %s Value: %s ",k,v));
-                    return new KeyValue<String,String>(k, v + k );
+
+                    try{
+
+                        Map<String, Object> jsonObject
+                                = objectMapper.readValue(v, new TypeReference<Map<String,Object>>(){});
+
+                        jsonObject.put("processedbyTransformer","True");
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        objectMapper.writer().writeValue(baos,jsonObject);
+
+                        v = new String(baos.toByteArray());
+
+                    }catch (Exception e){
+
+                        logger.error("Failed JSON transformation ",e);
+                        v = "Error";
+                    }
+
+
+                    logger.info( String.format("Kafka Message - Key: %s Value: %s ",k,v));
+                    return new KeyValue<String,String>(k, v );
                 }
         }).to(streamAppConfig.getOutputTopic(), Produced.with(Serdes.String(), Serdes.String()));
 
