@@ -5,6 +5,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
+import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
@@ -66,27 +67,27 @@ public class StreamTransformer implements CommandLineRunner {
 
         final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 
-        textLines.foreach(new ForeachAction<String, String>() {
-            void apply(String key, String value) {
-                System.out.println(key + ": " + value);
+        textLines.foreach(new ForeachAction<byte[], byte[]>() {
+            public void  apply(byte[] key, byte[]value) {
+                System.out.println( new String(key) + ": " + new String(value));
             }
         });
 
-        final KTable<String, Long> wordCounts = textLines
-                // Split each text line, by whitespace, into words.  The text lines are the record
-                // values, i.e. we can ignore whatever data is in the record keys and thus invoke
-                // `flatMapValues()` instead of the more generic `flatMap()`.
-                .flatMapValues(value -> Arrays.asList(pattern.split( new String(value).toLowerCase())))
-                // Group the split data by word so that we can subsequently count the occurrences per word.
-                // This step re-keys (re-partitions) the input data, with the new record key being the words.
-                // Note: No need to specify explicit serdes because the resulting key and value types
-                // (String and String) match the application's default serdes.
-                .groupBy((keyIgnored, word) -> word)
-                // Count the occurrences of each word (record key).
-                .count();
-
-        // Write the `KTable<String, Long>` to the output topic.
-        wordCounts.toStream().to(streamAppConfig.getOutputTopic(), Produced.with(Serdes.String(), Serdes.Long()));
+//        final KTable<String, Long> wordCounts = textLines
+//                // Split each text line, by whitespace, into words.  The text lines are the record
+//                // values, i.e. we can ignore whatever data is in the record keys and thus invoke
+//                // `flatMapValues()` instead of the more generic `flatMap()`.
+//                .flatMapValues(value -> Arrays.asList(pattern.split( new String(value).toLowerCase())))
+//                // Group the split data by word so that we can subsequently count the occurrences per word.
+//                // This step re-keys (re-partitions) the input data, with the new record key being the words.
+//                // Note: No need to specify explicit serdes because the resulting key and value types
+//                // (String and String) match the application's default serdes.
+//                .groupBy((keyIgnored, word) -> word)
+//                // Count the occurrences of each word (record key).
+//                .count();
+//
+//        // Write the `KTable<String, Long>` to the output topic.
+//        wordCounts.toStream().to(streamAppConfig.getOutputTopic(), Produced.with(Serdes.String(), Serdes.Long()));
     }
 
 }
