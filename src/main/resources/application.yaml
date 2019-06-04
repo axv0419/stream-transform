@@ -8,6 +8,9 @@ management:
   endpoint:
     restart:
       enabled:  true
+  info:
+    git:
+      mode: full
 
 spring:
   application:
