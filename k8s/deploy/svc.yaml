@@ -2,15 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: valley-app-dep
-  name: valley-app-svc
-  namespace: sorrento
+    app: julian-dep
+  name: julian-svc
+  namespace: ramona
 spec:
   ports:
   - port: 8080
     protocol: TCP
     targetPort: 8080
   selector:
-    app: valley-app-dep
+    app: julian-dep
   sessionAffinity: None
   type: NodePort

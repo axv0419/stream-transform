@@ -5,7 +5,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: sorrento
+    namespace: ramona
 roleRef:
   kind: ClusterRole
   name: cluster-admin

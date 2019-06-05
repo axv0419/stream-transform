@@ -11,14 +11,14 @@ management:
 
 spring:
   application:
-    name: valley-app
+    name: julian
   cloud:
     kubernetes:
       config:
-        name: valley-app
-        namespace: sorrento
+        name: julian
+        namespace: ramona
         sources:
-          - name: valley-app
+          - name: julian
       reload:
         enabled: true
         mode: polling

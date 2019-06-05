@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: valley-app-dep
-  name: valley-app-dep
-  namespace: sorrento
+    app: julian-dep
+  name: julian-dep
+  namespace: ramona
 spec:
   replicas: 2
   strategy:
@@ -14,14 +14,14 @@ spec:
       maxUnavailable: 25%
   selector:
     matchLabels:
-      app: valley-app-dep
+      app: julian-dep
   template:
     metadata:
       labels:
-        app: valley-app-dep
+        app: julian-dep
     spec:
       containers:
-        - image: gcr.io/p8-integrations-eu-dev-2/valley-app:latest
+        - image: gcr.io/p8-integrations-eu-dev-2/julian:latest
           imagePullPolicy: Always
           name: spring-boot-container
           ports:
