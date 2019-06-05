@@ -118,10 +118,9 @@ EOF
 echo
 echo "###  NOTICE ###"
 echo
-echo Please make sure that applicaiton.xml has sufficient information for develop/test your application locally.
-echo The setup will populate the Kubernetes cloud automatically.
+echo "Please add required configurations to ** ${BASE_DIR}/src/main/resources/application.yaml ** for develop/test your application locally."
+echo "The subsequent setup steps [TBD] will populate the Kubernetes namespace with required configurations."
 echo
-
 
 popd
 
