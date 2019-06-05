@@ -43,6 +43,7 @@ endpoints:
 stream-connector-config:
   inputTopic: test-01.stream.in
   outputTopic: test-01.stream.out
+  errorTopic: test-01.stream.error
   streamSettings:
     application.id: ajar-stream
     client.id: ajar-stream-one

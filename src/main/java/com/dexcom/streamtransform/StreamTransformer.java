@@ -1,11 +1,9 @@
 package com.dexcom.streamtransform;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
@@ -15,15 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Component
 public class StreamTransformer implements CommandLineRunner {
@@ -31,7 +23,7 @@ public class StreamTransformer implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(StreamTransformer.class);
 
     @Autowired
-    private StreamAppConfig streamAppConfig;
+    private ConfigurationBean streamAppConfig;
 
     public void run(final String[] args) {
 
@@ -70,70 +62,39 @@ public class StreamTransformer implements CommandLineRunner {
      * @param builder StreamsBuilder to use
      */
     void passThroughTransformer(final StreamsBuilder builder) {
-        // Construct a `KStream` from the input topic "streams-plaintext-input", where message values
-        // represent lines of text (for the sake of this example, we ignore whatever may be stored
-        // in the message keys).  The default key and value serdes will be used.
-        final KStream<byte[], byte[]> messageStream = builder.stream(streamAppConfig.getInputTopic());
 
-//        final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
+        final KStream<byte[], byte[]> stream = builder.stream(streamAppConfig.getInputTopic());
 
         final ObjectMapper objectMapper = new ObjectMapper();
 
-        messageStream.map(
-            new KeyValueMapper<byte[], byte[], KeyValue<String,String>>() {
-                @Override
-                public KeyValue<String,String> apply(final byte[] key, final byte[] value) {
-                    if (value == null) {
-                        return new KeyValue<>(null, null);
-                    }
-                    String k = new String(key);
-                    String v = new String(value);
-
-                    try{
-
-                        Map<String, Object> jsonObject
-                                = objectMapper.readValue(v, new TypeReference<Map<String,Object>>(){});
-
-                        jsonObject.put("processedbyTransformer","True");
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        objectMapper.writer().writeValue(baos,jsonObject);
-
-                        v = new String(baos.toByteArray());
-
-                    }catch (Exception e){
-
-                        logger.error("Failed JSON transformation ",e);
-                        v = "Error";
-                    }
+        // Parse input message to JSON
+        KStream<byte[], StreamRecord> validated = stream.mapValues(( byte[] value) -> {
+            try{
+                JsonNode jnode = objectMapper.reader().readTree(new String(value));
+                return  new StreamRecord(value,jnode.toString(),true);
+            }catch (Exception e){
+                logger.info("Failed to parse the input value as JSON",e);
+                return  new StreamRecord(value,null,false);
+            }
+        });
 
 
-                    logger.info( String.format("Kafka Message - Key: %s Value: %s ",k,v));
-                    return new KeyValue<String,String>(k, v );
-                }
-        }).to(streamAppConfig.getOutputTopic(), Produced.with(Serdes.String(), Serdes.String()));
+        // Create 2 branches , Good data and bad data.
+        KStream<byte[], StreamRecord>[] twoBranches = validated.branch(
+                (key, value) -> value.isValid(), /* first predicate  */
+                (key, value) -> !value.isValid() /* second predicate */
+        );
 
-//        textLines
-//                .foreach(  (key,value ) ->{
-//                    System.out.println( new String(key) + ": " + new String(value));
-//                })
-//
-//        ;
+        // Put good data on output topic
+        twoBranches[0].mapValues(value -> value.getConvertedString()).to(streamAppConfig.getOutputTopic(),
+                Produced.with(Serdes.ByteArray(), Serdes.String()));
 
-//        final KTable<String, Long> wordCounts = textLines
-//                // Split each text line, by whitespace, into words.  The text lines are the record
-//                // values, i.e. we can ignore whatever data is in the record keys and thus invoke
-//                // `flatMapValues()` instead of the more generic `flatMap()`.
-//                .flatMapValues(value -> Arrays.asList(pattern.split( new String(value).toLowerCase())))
-//                // Group the split data by word so that we can subsequently count the occurrences per word.
-//                // This step re-keys (re-partitions) the input data, with the new record key being the words.
-//                // Note: No need to specify explicit serdes because the resulting key and value types
-//                // (String and String) match the application's default serdes.
-//                .groupBy((keyIgnored, word) -> word)
-//                // Count the occurrences of each word (record key).
-//                .count();
-//
-//        // Write the `KTable<String, Long>` to the output topic.
-//        wordCounts.toStream().to(streamAppConfig.getOutputTopic(), Produced.with(Serdes.String(), Serdes.Long()));
+
+        // Put bad data in error topic
+        twoBranches[1].mapValues(value -> value.getOriginalContent()).to(streamAppConfig.getErrorTopic(),
+                Produced.with(Serdes.ByteArray(), Serdes.ByteArray()));
+
+
     }
 
 }

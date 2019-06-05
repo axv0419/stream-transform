@@ -10,13 +10,17 @@ import java.util.HashMap;
 @Component
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "stream-connector-config")
-public class StreamAppConfig {
+public class ConfigurationBean {
 
     @Value("${stream-connector-config.inputTopic}")
     private String inputTopic;
 
     @Value("${stream-connector-config.outputTopic}")
     private String outputTopic;
+
+
+    @Value("${stream-connector-config.errorTopic}")
+    private String errorTopic;
 
     private HashMap<String, String> streamSettings;
 
@@ -26,6 +30,10 @@ public class StreamAppConfig {
 
     public String getOutputTopic() {
         return outputTopic;
+    }
+
+    public String getErrorTopic() {
+        return errorTopic;
     }
 
     public HashMap<String, String> getStreamSettings() {
