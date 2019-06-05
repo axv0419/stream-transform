@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ${KUBE_APP_NAME}-dep
+  name: ${KUBE_APP_NAME}-dep
+  namespace: ${KUBE_NAMESPACE}
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: ${KUBE_APP_NAME}-dep
+  template:
+    metadata:
+      labels:
+        app: ${KUBE_APP_NAME}-dep
+    spec:
+      containers:
+        - image: gcr.io/p8-integrations-eu-dev-2/${KUBE_APP_NAME}:latest
+          imagePullPolicy: Always
+          name: spring-boot-container
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 30

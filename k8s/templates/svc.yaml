@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ${KUBE_APP_NAME}-dep
+  name: ${KUBE_APP_NAME}-svc
+  namespace: ${KUBE_NAMESPACE}
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: ${KUBE_APP_NAME}-dep
+  sessionAffinity: None
+  type: NodePort
