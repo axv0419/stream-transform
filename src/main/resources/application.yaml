@@ -39,3 +39,8 @@ stream-connector-config:
     client.id: ajar-stream-one
     bootstrap.servers: 172.19.43.2:9092
 #    bootstrap.servers: libra:29092
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.cloud.config: DEBUG
