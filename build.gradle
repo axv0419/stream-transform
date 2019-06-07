@@ -21,6 +21,7 @@ ext {
 dependencies {
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+	compile 'org.springframework.cloud:spring-cloud-starter-kubernetes-config:1.0.1.RELEASE'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.apache.kafka:kafka-streams'
