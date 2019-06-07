@@ -40,7 +40,3 @@ stream-connector-config:
     bootstrap.servers: 172.19.43.2:9092
 #    bootstrap.servers: libra:29092
 
-logging:
-  level:
-    ROOT: INFO
-    org.springframework.cloud.config: DEBUG
