@@ -18,7 +18,6 @@ public class ConfigurationBean {
     @Value("${stream-connector-config.outputTopic}")
     private String outputTopic;
 
-
     @Value("${stream-connector-config.errorTopic}")
     private String errorTopic;
 
