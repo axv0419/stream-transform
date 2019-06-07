@@ -44,5 +44,10 @@ stream-connector-config:
   streamSettings:
     application.id: ajar-stream
     client.id: ajar-stream-one
-    #    bootstrap.servers: 172.19.43.2:9092
-    bootstrap.servers: libra:29092
+    ssl.endpoint.identification.algorithm: https
+    sasl.mechanism: PLAIN
+    bootstrap.servers: pkc-l5w5g.europe-west3.gcp.confluent.cloud:9092
+    sasl.jaas.config: 'org.apache.kafka.common.security.plain.PlainLoginModule required username="LIKDU2ITTTSFTFPP" password="1Qk2A6AJ9aD3OMHYTFwJ96WvyX3ZnpnUvKwwVKqpKsWlkNWq7wV81YQ/JubNt+B2";'
+    security.protocol: SASL_SSL
+    commit.interval.ms: 10000
+    cache.max.bytes.buffering: 0
