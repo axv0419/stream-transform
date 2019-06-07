@@ -1,9 +1,14 @@
 substitutions:
   _DEXCOM_PROJECT_ID: julian
   _DEXCOM_NAMESPACE: colorado
+tags:
+  - rookie
+  - learner
 images:
   - "gcr.io/$PROJECT_ID/${_DEXCOM_PROJECT_ID}:$REVISION_ID"
 steps:
+  - name: 'gcr.io/google-containers/busybox'
+    args: ['echo','Creating a build - $PROJECT_ID $BUILD_ID $BRANCH_NAME $TAG_NAME $REPO_NAME $REVISION_ID']
   - name: 'gcr.io/cloud-builders/gradle'
     args: ['build']
   - name: 'gcr.io/cloud-builders/docker'
