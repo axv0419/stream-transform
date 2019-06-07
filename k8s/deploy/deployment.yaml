@@ -21,7 +21,7 @@ spec:
         app: julian-dep
     spec:
       containers:
-        - image: gcr.io/p8-integrations-eu-dev-2/julian:latest
+        - image: gcr.io/p8-integrations-eu-dev-2/julian:2a54b33ec9d20be54661f03be98587c288ed76b4
           imagePullPolicy: Always
           name: spring-boot-container
           ports:

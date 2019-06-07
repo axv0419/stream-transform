@@ -37,3 +37,12 @@ endpoints:
   beans:
     enabled: true
 
+stream-connector-config:
+  inputTopic: test-01.stream.in
+  outputTopic: test-01.stream.out
+  errorTopic: test-01.stream.error
+  streamSettings:
+    application.id: ajar-stream
+    client.id: ajar-stream-one
+    #    bootstrap.servers: 172.19.43.2:9092
+    bootstrap.servers: libra:29092
