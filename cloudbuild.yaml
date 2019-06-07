@@ -1,6 +1,6 @@
 substitutions:
   _DEXCOM_PROJECT_ID: julian
-  _DEXCOM_NAMESPACE: ramona
+  _DEXCOM_NAMESPACE: colorado
 images:
   - "gcr.io/$PROJECT_ID/${_DEXCOM_PROJECT_ID}:$REVISION_ID"
 steps:

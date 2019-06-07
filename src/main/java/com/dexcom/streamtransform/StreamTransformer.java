@@ -69,14 +69,19 @@ public class StreamTransformer implements CommandLineRunner {
 
         // Parse input message to JSON
         KStream<byte[], StreamRecord> validated = stream.mapValues(( byte[] value) -> {
+            String valueString = new String(value);
+            String jsonString = null;
             try{
-                JsonNode jnode = objectMapper.reader().readTree(new String(value));
-                return  new StreamRecord(value,jnode.toString(),true);
+                JsonNode jnode = objectMapper.reader().readTree(valueString);
+                jsonString = jnode.toString();
+                logger.info("Received Message: "+jsonString);
             }catch (Exception e){
-                logger.info("Failed to parse the input value as JSON",e);
+                logger.info("Bad Message: "+valueString);
                 return  new StreamRecord(value,null,false);
             }
+            return  new StreamRecord(value,jsonString,true);
         });
+
 
 
         // Create 2 branches , Good data and bad data.
@@ -85,13 +90,21 @@ public class StreamTransformer implements CommandLineRunner {
                 (key, value) -> !value.isValid() /* second predicate */
         );
 
+        KStream<byte[], StreamRecord> validJsonStream = twoBranches[0];
+        KStream<byte[], StreamRecord> inValidDataStream = twoBranches[1];
+
         // Put good data on output topic
-        twoBranches[0].mapValues(value -> value.getConvertedString()).to(streamAppConfig.getOutputTopic(),
+        validJsonStream.mapValues(value -> value.getConvertedString()).to(streamAppConfig.getOutputTopic(),
                 Produced.with(Serdes.ByteArray(), Serdes.String()));
+
+//        validJsonStream.groupBy((key, record) -> record.getConvertedString())
+//        // Filter Duplicate
+//        final KTable<byte[],String> referenceTable = builder.table("test-01.table.in");
+//        validJsonStream.join(referenceTable)
 
 
         // Put bad data in error topic
-        twoBranches[1].mapValues(value -> value.getOriginalContent()).to(streamAppConfig.getErrorTopic(),
+        inValidDataStream.mapValues(value -> value.getOriginalContent()).to(streamAppConfig.getErrorTopic(),
                 Produced.with(Serdes.ByteArray(), Serdes.ByteArray()));
 
 

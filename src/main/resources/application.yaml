@@ -16,13 +16,14 @@ spring:
     kubernetes:
       config:
         name: julian
-        namespace: ramona
+        namespace: colorado
         sources:
           - name: julian
       reload:
         enabled: true
         mode: polling
         period: 2000
+
 # Actuator endpoints
 endpoints:
   cors:
@@ -36,18 +37,3 @@ endpoints:
   beans:
     enabled: true
 
-stream-connector-config:
-  inputTopic: test-01.stream.in
-  outputTopic: test-01.stream.out
-  errorTopic: test-01.stream.error
-  streamSettings:
-    application.id: ajar-stream
-    client.id: ajar-stream-one
-    ssl.endpoint.identification.algorithm: https
-    sasl.mechanism: PLAIN
-    bootstrap.servers: pkc-l5w5g.europe-west3.gcp.confluent.cloud:9092
-    sasl.jaas.config: 'org.apache.kafka.common.security.plain.PlainLoginModule required username="LIKDU2ITTTSFTFPP" password="1Qk2A6AJ9aD3OMHYTFwJ96WvyX3ZnpnUvKwwVKqpKsWlkNWq7wV81YQ/JubNt+B2";'
-    security.protocol: SASL_SSL
-    commit.interval.ms: 10000
-    cache.max.bytes.buffering: 0
-  

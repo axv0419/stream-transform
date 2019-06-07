@@ -5,7 +5,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: ramona
+    namespace: colorado
 roleRef:
   kind: ClusterRole
   name: cluster-admin
