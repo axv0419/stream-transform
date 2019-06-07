@@ -2,7 +2,7 @@
 info:
   company: Dexcom
   project: integrations
-
+  kafkaVersion: "${stream-connector-config.kafkaName}"
 # Management endpoints
 management:
   endpoint:
@@ -41,6 +41,7 @@ stream-connector-config:
   inputTopic: test-01.stream.in
   outputTopic: test-01.stream.out
   errorTopic: test-01.stream.error
+  kafkaName: ccloud-eu-dev
   streamSettings:
     application.id: ajar-stream
     client.id: ajar-stream-one
