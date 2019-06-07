@@ -18,8 +18,6 @@ public class ConfigurationBean {
     @Value("${stream-connector-config.outputTopic}")
     private String outputTopic;
 
-    @Value("${stream-connector-config.kafkaName}")
-    private String kafkaName;
 
     @Value("${stream-connector-config.errorTopic}")
     private String errorTopic;
@@ -36,10 +34,6 @@ public class ConfigurationBean {
 
     public String getErrorTopic() {
         return errorTopic;
-    }
-
-    public String getKafkaName() {
-        return kafkaName;
     }
 
     public HashMap<String, String> getStreamSettings() {
