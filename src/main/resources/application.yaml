@@ -12,17 +12,6 @@ management:
 spring:
   application:
     name: julian
-  cloud:
-    kubernetes:
-      config:
-        name: julian
-        namespace: colorado
-        sources:
-          - name: julian
-      reload:
-        enabled: true
-        mode: polling
-        period: 2000
 
 # Actuator endpoints
 endpoints:
