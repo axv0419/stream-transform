@@ -2,15 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: julian-dep
-  name: julian-svc
-  namespace: colorado
+    app: stream-filter-dep
+  name: stream-filter-svc
+  namespace: big-island
 spec:
   ports:
   - port: 8080
     protocol: TCP
     targetPort: 8080
   selector:
-    app: julian-dep
+    app: stream-filter-dep
   sessionAffinity: None
   type: NodePort

@@ -22,6 +22,8 @@ echo .
 echo running from $(pwd)
 echo .
 
+mkdir -p ${BASE_DIR}/k8s/deploy
+
 for f in ${BASE_DIR}/k8s/templates/*.yaml ;
     do
     envsubst < $f > ${BASE_DIR}/k8s/deploy/${f##*/} ;
@@ -94,21 +96,22 @@ cat << EOF > ${BASE_DIR}/cloudbuild.yaml
 substitutions:
   _DEXCOM_PROJECT_ID: ${KUBE_APP_NAME}
   _DEXCOM_NAMESPACE: ${KUBE_NAMESPACE}
+  _DEXCOM_RELEASE_TAG: "latest"
 images:
-  - "gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}REVISION_ID"
+  - "gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}{_DEXCOM_RELEASE_TAG}"
 steps:
   - name: 'gcr.io/cloud-builders/gradle'
     args: ['build']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '--tag=gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}REVISION_ID', '.']
+    args: ['build', '--tag=gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}{_DEXCOM_RELEASE_TAG}', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ["push", "gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}REVISION_ID"]
+    args: ["push", "gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}{_DEXCOM_RELEASE_TAG}"]
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'set'
       - 'image'
       - 'deployment/${DOLLAR}{_DEXCOM_PROJECT_ID}-dep'
-      - 'spring-boot-container=gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}REVISION_ID'
+      - 'spring-boot-container=gcr.io/${DOLLAR}PROJECT_ID/${DOLLAR}{_DEXCOM_PROJECT_ID}:${DOLLAR}{_DEXCOM_RELEASE_TAG}'
       - '--namespace=${DOLLAR}{_DEXCOM_NAMESPACE}'
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=${KUBE_REGION}'

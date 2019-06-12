@@ -2,33 +2,39 @@
 info:
   company: Dexcom
   project: integrations
-  kafkaName: ${stream-connector-config.kafkaName:unavailable}
+  kafkaCluserName: "${stream-connector-config.kafkaCluserName:param-not-available}"
 # Management endpoints
 management:
   endpoint:
     restart:
       enabled:  true
-  cors:
-    allowed-origins: "*"
-  endpoints:
-    web:
-      exposure:
-        include: "*"
 
 spring:
   application:
-    name: julian
+    name: stream-filter
   cloud:
     kubernetes:
       config:
-        name: julian
-        namespace: colorado
+        name: stream-filter
+        namespace: big-island
         sources:
-          - name: julian
+          - name: stream-filter
       reload:
         enabled: true
         mode: polling
         period: 2000
+# Actuator endpoints
+endpoints:
+  cors:
+    allowed-origins: "*"
+  metrics:
+    enabled: true
+  configprops:
+    enabled: true
+  env:
+    enabled: true
+  beans:
+    enabled: true
 
 stream-connector-config:
   inputTopic: test-01.stream.in
@@ -40,4 +46,3 @@ stream-connector-config:
     client.id: ajar-stream-one
     bootstrap.servers: 172.19.43.2:9092
 #    bootstrap.servers: libra:29092
-

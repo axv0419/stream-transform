@@ -8,13 +8,17 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class RecordValidator {
@@ -27,14 +31,15 @@ public class RecordValidator {
     private Schema schema;
     @PostConstruct
     public void init() throws  Exception{
-        File file = ResourceUtils.getFile("classpath:schemas/"+inputRecordSchema+".json");
-        logger.info("schemas/"+inputRecordSchema+" ->"+file);
-        if (file == null || !file.exists()){
-            throw new Exception(String.format("Schema json file could not be loaded for inputRecordSchema: %s",inputRecordSchema));
+
+        try{
+            ClassPathResource cpr = new ClassPathResource("schemas/"+inputRecordSchema+".json");
+            JSONObject rawSchema = new JSONObject(new JSONTokener(cpr.getInputStream()));
+            schema = SchemaLoader.load(rawSchema);
+        }catch (Exception ex){
+            logger.warn("Unable to load schema for validation");
+            throw ex;
         }
-        JSONObject rawSchema = new JSONObject(new JSONTokener(new FileInputStream(file)));
-//        logger.info("Schema::"+rawSchema);
-        schema = SchemaLoader.load(rawSchema);
     }
 
     public StreamRecord validate(byte[] data){

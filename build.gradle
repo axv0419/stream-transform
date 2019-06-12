@@ -28,7 +28,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile 'org.everit.json:org.everit.json.schema:1.0.0'
 	compile group: 'commons-io', name: 'commons-io', version: '2.5'
-
+	testCompile("org.springframework.boot:spring-boot-starter-test") {
+		exclude group: "com.vaadin.external.google", module:"android-json"
+	}
 }
 
 dependencyManagement {

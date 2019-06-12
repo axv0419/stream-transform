@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: julian-dep
-  name: julian-dep
-  namespace: colorado
+    app: stream-filter-dep
+  name: stream-filter-dep
+  namespace: big-island
 spec:
   replicas: 2
   strategy:
@@ -14,14 +14,14 @@ spec:
       maxUnavailable: 25%
   selector:
     matchLabels:
-      app: julian-dep
+      app: stream-filter-dep
   template:
     metadata:
       labels:
-        app: julian-dep
+        app: stream-filter-dep
     spec:
       containers:
-        - image: gcr.io/p8-integrations-eu-dev-2/julian:924597f579a896200e2dafc08e8e9790e8b1534d
+        - image: gcr.io/p8-integrations-eu-dev-2/stream-filter:latest
           imagePullPolicy: Always
           name: spring-boot-container
           ports:

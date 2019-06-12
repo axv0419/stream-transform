@@ -12,3 +12,9 @@ ccloud topic create --partitions 10 --replication-factor 3 -- ajar-stream-KSTREA
 ccloud topic create --partitions 10 --replication-factor 3 -- ajar-stream-KSTREAM-AGGREGATE-STATE-STORE-0000000003-changelog
 ```
 
+
+### Build the project directly 
+
+```bash
+gcloud builds submit . --config cloudbuild.yaml
+```
