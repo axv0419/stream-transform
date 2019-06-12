@@ -1,7 +1,7 @@
 substitutions:
   _DEXCOM_PROJECT_ID: stream-filter
   _DEXCOM_NAMESPACE: big-island
-  _DEXCOM_RELEASE_TAG: "latest"
+  _DEXCOM_RELEASE_TAG: "${REVISION_ID}"
 images:
   - "gcr.io/$PROJECT_ID/${_DEXCOM_PROJECT_ID}:${_DEXCOM_RELEASE_TAG}"
 steps:
