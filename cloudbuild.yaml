@@ -1,7 +1,7 @@
 substitutions:
   _DEXCOM_PROJECT_ID: julian
   _DEXCOM_NAMESPACE: colorado
-  _DEXCOM_RELEASE_TAG: 1.2
+  _DEXCOM_RELEASE_TAG: "1.2"
 tags:
   - rookie
   - learner
