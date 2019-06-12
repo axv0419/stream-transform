@@ -34,6 +34,7 @@ stream-connector-config:
   inputTopic: test-01.stream.in
   outputTopic: test-01.stream.out
   errorTopic: test-01.stream.error
+  inputRecordSchema: account-v1.0.2
   streamSettings:
     application.id: ajar-stream
     client.id: ajar-stream-one

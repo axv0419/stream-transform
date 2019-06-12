@@ -8,15 +8,21 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
 import org.apache.kafka.streams.kstream.*;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
 import org.slf4j.Logger;
 
+@Lazy
 @Component
 public class StreamTransformer implements CommandLineRunner {
 
@@ -25,10 +31,10 @@ public class StreamTransformer implements CommandLineRunner {
     @Autowired
     private ConfigurationBean streamAppConfig;
 
+    @Autowired
+    private RecordValidator recordValidator;
+
     public void run(final String[] args) {
-
-        System.out.println(streamAppConfig.getStreamSettings());
-
 
 //        final String bootstrapServers = args.length > 0 ? args[0] : "localhost:9092";
 //
@@ -66,20 +72,11 @@ public class StreamTransformer implements CommandLineRunner {
         final KStream<byte[], byte[]> stream = builder.stream(streamAppConfig.getInputTopic());
 
         final ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(streamAppConfig.getStreamSettings());
 
-        // Parse input message to JSON
+        // Validate input json using the Validator
         KStream<byte[], StreamRecord> validated = stream.mapValues(( byte[] value) -> {
-            String valueString = new String(value);
-            String jsonString = null;
-            try{
-                JsonNode jnode = objectMapper.reader().readTree(valueString);
-                jsonString = jnode.toString();
-                logger.info("Received Message: "+jsonString);
-            }catch (Exception e){
-                logger.info("Bad Message: "+valueString);
-                return  new StreamRecord(value,null,false);
-            }
-            return  new StreamRecord(value,jsonString,true);
+            return recordValidator.validate(value);
         });
 
 

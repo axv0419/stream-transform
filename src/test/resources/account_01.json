@@ -1,0 +1,22 @@
+{
+  "eventDate": "2019-06-01T00:00:00Z",
+  "eventSource": "sfcc",
+  "eventSourceID": "123456789",
+  "author": "",
+  "eventState": "createPending",
+  "systemOfOrigin": "sfcc",
+  "systemOfOriginID": "1233456789",
+  "accountID": "",
+  "addressID": "",
+  "isActive": true,
+  "isPrimary": true,
+  "addressType": "billing",
+  "address1": "234 Wellington Street",
+  "address2": "",
+  "address3": "",
+  "city": "Ottawa",
+  "stateProvince": "ON",
+  "postalCode": "K1A 0G9",
+  "countryCode": "CA",
+  "country": "Canada"
+}

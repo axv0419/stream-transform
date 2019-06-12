@@ -1,0 +1,229 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "eventDate",
+    "eventSource",
+    "eventSourceID",
+    "author",
+    "eventState",
+    "systemOfOrigin",
+    "systemOfOriginID",
+    "accountID",
+    "addressID",
+    "isActive",
+    "isPrimary",
+    "addressType",
+    "address1",
+    "address2",
+    "address3",
+    "city",
+    "stateProvince",
+    "postalCode",
+    "countryCode",
+    "country"
+  ],
+  "properties": {
+    "eventDate": {
+      "$id": "#/properties/eventDate",
+      "type": "string",
+      "format": "date-time",
+      "title": "The Eventdate Schema",
+      "default": "",
+      "examples": [
+        "2019-06-01T00:00:00Z"
+      ]
+    },
+    "eventSource": {
+      "$id": "#/properties/eventSource",
+      "type": "string",
+      "title": "The Eventsource Schema",
+      "default": "",
+      "examples": [
+        "sfcc"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "eventSourceID": {
+      "$id": "#/properties/eventSourceID",
+      "type": "string",
+      "title": "The Eventsourceid Schema",
+      "default": "",
+      "examples": [
+        "123456789"
+      ],
+      "pattern": "^([0-9]*)$"
+    },
+    "author": {
+      "$id": "#/properties/author",
+      "type": "string",
+      "title": "The Author Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "eventState": {
+      "$id": "#/properties/eventState",
+      "type": "string",
+      "title": "The Eventstate Schema",
+      "default": "",
+      "examples": [
+        "createPending"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "systemOfOrigin": {
+      "$id": "#/properties/systemOfOrigin",
+      "type": "string",
+      "title": "The Systemoforigin Schema",
+      "default": "",
+      "examples": [
+        "sfcc"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "systemOfOriginID": {
+      "$id": "#/properties/systemOfOriginID",
+      "type": "string",
+      "title": "The Systemoforiginid Schema",
+      "default": "",
+      "examples": [
+        "1233456789"
+      ],
+      "pattern": "^([0-9]*)$"
+    },
+    "accountID": {
+      "$id": "#/properties/accountID",
+      "type": "string",
+      "title": "The Accountid Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "addressID": {
+      "$id": "#/properties/addressID",
+      "type": "string",
+      "title": "The Addressid Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "isActive": {
+      "$id": "#/properties/isActive",
+      "type": "boolean",
+      "title": "The Isactive Schema",
+      "default": false,
+      "examples": [
+        true
+      ]
+    },
+    "isPrimary": {
+      "$id": "#/properties/isPrimary",
+      "type": "boolean",
+      "title": "The Isprimary Schema",
+      "default": false,
+      "examples": [
+        true
+      ]
+    },
+    "addressType": {
+      "$id": "#/properties/addressType",
+      "type": "string",
+      "title": "The Addresstype Schema",
+      "default": "",
+      "examples": [
+        "billing"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "address1": {
+      "$id": "#/properties/address1",
+      "type": "string",
+      "title": "The Address1 Schema",
+      "default": "",
+      "examples": [
+        "234 Wellington Street"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "address2": {
+      "$id": "#/properties/address2",
+      "type": "string",
+      "title": "The Address2 Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "address3": {
+      "$id": "#/properties/address3",
+      "type": "string",
+      "title": "The Address3 Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "city": {
+      "$id": "#/properties/city",
+      "type": "string",
+      "title": "The City Schema",
+      "default": "",
+      "examples": [
+        "Ottawa"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "stateProvince": {
+      "$id": "#/properties/stateProvince",
+      "type": "string",
+      "title": "The Stateprovince Schema",
+      "default": "",
+      "examples": [
+        "ON"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "postalCode": {
+      "$id": "#/properties/postalCode",
+      "type": "string",
+      "title": "The Postalcode Schema",
+      "default": "",
+      "examples": [
+        "K1A 0G9"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "countryCode": {
+      "$id": "#/properties/countryCode",
+      "type": "string",
+      "title": "The Countrycode Schema",
+      "default": "",
+      "examples": [
+        "CA"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "country": {
+      "$id": "#/properties/country",
+      "type": "string",
+      "title": "The Country Schema",
+      "default": "",
+      "examples": [
+        "Canada"
+      ],
+      "pattern": "^(.*)$"
+    }
+  }
+}

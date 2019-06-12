@@ -36,14 +36,14 @@ public class StreamTransformApplication {
         SpringApplication.run(StreamTransformApplication.class, args);
     }
 
-    @Value("${stream-connector-config.kafkaName:no idea}")
-    private String kafkaName;
+    @Value("${stream-connector-config.kafkaCluserName:development-cluster}")
+    private String kafkaCluserName;
 
-    @GetMapping("/kafka/config")
+    @GetMapping("/kafka/info")
     @ResponseBody
-    public Map<String, String> kafkaconfig() {
+    public Map<String, String> kafkaInfo() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("kafkaName",kafkaName);
+        map.put("kafkaCluserName",kafkaCluserName);
         return map;
     }
 
